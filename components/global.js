@@ -1,0 +1,1 @@
+export var SPRITE_IMAGE = "cat";
