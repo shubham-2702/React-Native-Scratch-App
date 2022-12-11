@@ -1,11 +1,15 @@
 import React ,{useState,useEffect}from "react";
-import { StyleSheet, View, Text, TextInput, FlatList, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, TextInput, FlatList, TouchableOpacity, Image, ImageBackground,  } from 'react-native';
 import Draggable from 'react-native-draggable';
 import EventEmitter from "react-native-eventemitter";
+import Header from "./Header";
 
-const global = require("./global");
 
-export default function Code() {
+const SPRITE_IMAGE = require("./global");
+
+export default function Code({navigation}) {
+  //console.log(route);
+  console.log(navigation.getParam("paramKey"));
     const [commands,setCommands]=useState([{id: 1, firstCommand: "move", secondCommand: "steps", input: "10"},
     {id: 10, firstCommand: "set y", secondCommand: "to", input: "10"},
     {id: 7, firstCommand: "change x", secondCommand: "by", input: "10"},
@@ -22,7 +26,7 @@ export default function Code() {
     const [text,setText]=useState("");
     const [sprite,setSprite]=useState("cat");
     const [backgroundImage,setBackgroundImage]=useState("background1");
-    const [selectedSprites,setSelectedSprites]=useState(["cat"]);
+    const [selectedSprites,setSelectedSprites]=useState(["cat",null]);
     const [catX,setCatX]=useState(0);
     const [catY,setCatY]=useState(0);
     const [ballX,setballX]=useState(0);
@@ -31,14 +35,19 @@ export default function Code() {
     const [transformball,setTransformball]=useState(0);
       
   useEffect(()=>{
-    EventEmitter.on("Sprite Updated", ()=>{
+    // EventEmitter.on("Sprite Updated", ()=>{
+    //   var selectedSprite = selectedSprites;
+    //   selectedSprite.push(navigation.getParam("paramKey"))
+    //   setSelectedSprites(selectedSprites)
+    // })
+    EventEmitter.on("Sprite Updated", () => {
       var selectedSprite = selectedSprites;
-      selectedSprite.push(global.SPRITE_IMAGE)
-      setSelectedSprites(selectedSprites)
-    })
-    EventEmitter.on("Background Updated", ()=>{
-      setBackgroundImage(global.BACKGROUND_IMAGE)
-    })
+      console.log("📌 👉 👨‍💻 EventEmitter.on 👨‍💻 selectedSprites", selectedSprites);
+      console.log("📌 👉 👨‍💻 EventEmitter.on 👨‍💻 selectedSprite", selectedSprite);
+      selectedSprite.push(navigation.getParam("paramKey"));
+      setSelectedSprites(selectedSprite);
+    });
+    
   },[]);
 
   const commandListInputChange = (text, index) => {
@@ -145,6 +154,9 @@ export default function Code() {
     return (
       <View style={{flex: 1,marginTop: 50}}>
         <View>
+          <Header />
+        </View>
+        <View>
         <FlatList
         data={commands}
         horizontal={true}
@@ -164,7 +176,9 @@ export default function Code() {
         {backgroundImage == "background1" ? 
            <ImageBackground source={require('../assets/background1.jpg')} style={{resizeMode: "cover", height: "100%"}}>
           <View style={{flexDirection: "row"}}>
-              {selectedSprites.map((item)=>{return(
+              {selectedSprites.map((item)=>{
+                console.log(item)
+                return(
                 item == "cat" ? 
                 <View style={{flexDirection: "row"}}>
                   <Draggable>
@@ -218,7 +232,7 @@ export default function Code() {
         </TouchableOpacity>
         <View style={{flexDirection: "row", bottom: 32, left: 32, position: "absolute"}}>
           <TouchableOpacity onPress={()=>{navigation.navigate("SpriteSelect")}}>
-              <Text style={{fontWeight: "bold", backgroundColor: "pink"}}>Sprite Select</Text>
+              <Text style={{ fontWeight: "bold", backgroundColor: "#c3c3c3", padding: "4px", borderRadius: "10px" }}>Sprite Select</Text>
           </TouchableOpacity>
         </View>
       </View>

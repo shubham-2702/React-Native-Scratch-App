@@ -30,6 +30,7 @@ const router = createStackNavigator({
     }
 });
 
+
 const AppNavigator = createAppContainer(router)
 
 export default class App extends React.Component {

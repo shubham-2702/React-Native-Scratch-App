@@ -4,12 +4,15 @@ import EventEmitter from "react-native-eventemitter";
 
 const {SPRITE_IMAGE} = require("./global");
 
-export default function SpriteSelect() {
+export default function SpriteSelect({navigation}) {
 
     const spriteSelected = (sprite) => {
-        SPRITE_IMAGE = sprite
+        //SPRITE_IMAGE = sprite
         EventEmitter.emit("Sprite Updated")
-        props.navigation.pop()
+        navigation.navigate("Code", {
+            paramKey: sprite,
+          });
+        //navigation.pop()
     }
 
         return(
